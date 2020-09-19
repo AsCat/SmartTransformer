@@ -5,23 +5,25 @@ import java.util.Map;
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
+        // write your code here
 
         Transformer transformer = new Transformer();
-        transformer.addInput("A", "[{a1:1,a2:2,a3:3}, {a1:2,a2:2,a3:3}, {a1:3,a2:2,a3:3}]");
-        transformer.addInput("B", "[{b1:2,b2:2,b3:4}]");
-        transformer.addInput("C", "[{c1:4,c2:2,c3:5}]");
+        transformer.addJsonInput("Class", "[{\"id\":1,\"teacherId\":2,\"name\":\"小1班\"}, {\"id\":2,\"teacherId\":2,\"name\":\"小2班\"}, {\"id\":3,\"teacherId\":3,\"name\":\"小3班\"}]");
+        transformer.addJsonInput("Teacher", "[{\"id\":1,\"name\":\"李老师\",\"age\":24},{\"id\":2,\"name\":\"陈老师\",\"age\":46},{\"id\":3,\"name\":\"王老师\",\"age\":26}]");
+        transformer.addJsonInput("Student", "[{\"id\":1,\"name\":\"东东\",\"sex\":\"男\", \"classId\":1},{\"id\":2\",\"name\":\"丁丁\",\"sex\":\"男\", \"classId\":2},{\"id\":3,\"name\":\"琪琪\",\"sex\":\"女\", \"classId\":1}]");
 
-        transformer.addMapping("(B.b3=C.c1)->B.c4");
-        transformer.addMapping("(A.a2=B.b1)->A.a4");
-        transformer.addMapping("(B.b3=C.c1)->B.c6");
-        transformer.addMapping("(B.b3=C.c1)->B.c5");
+        //transformer.addInvokeInput("Student", "invoke://com.sss.xcc.getStudents({studentId}, 222)");
+        //transformer.addHttpInput("Student", "http://www.baidu.com/students/{studentId}", ".content");
 
-        transformer.addFilter("A.a1>2");
+        // transformer.addInvokeInput("Student", "HTTP", "invokeId", "id=")
 
-        transformer.setAcceptHolder("{a:$A,b:$B,c:$C}");
+        transformer.addMapping("(Class.teacherId=Teacher.id)->Class.teacher");
+        transformer.addMapping("(Student.classId=Class.id)->Class.student");
 
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        //transformer.addFilter("Teacher.age<40");
+        //transformer.addFilter("Student.sex=\"男\"");
+
+        transformer.setAcceptHolder("{\"class\":$Class}");
 
         System.out.println("[RESULT]");
         Map<String, TempStruct> output = transformer.process();
@@ -31,6 +33,6 @@ public class Main {
             System.out.println(output.get(key).getData());
         }
 
-//        JsonElement jelement = new JsonParser().parse(jsonLine);
+        // JsonElement jelement = new JsonParser().parse(jsonLine);
     }
 }

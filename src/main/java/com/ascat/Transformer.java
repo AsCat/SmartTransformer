@@ -21,7 +21,7 @@ public class Transformer {
 
     private String resultExpression;
 
-    public void addInput(String structName, String structValue) {
+    public void addJsonInput(String structName, String structValue) {
         this.inputs.put(structName, new JsonInput(structValue));
         this.temps.put(structName, new TempStruct(structValue));
     }
@@ -38,14 +38,14 @@ public class Transformer {
 
         this.mappings = new DependencyParser().sort(this.mappings);
 
-        // apply mapping
-        for (int i = this.mappings.size() - 1; i >= 0; i--) {
-            applyMapping(temps, this.mappings.get(i));
-        }
-
         // apply filter
         for (int i = 0; i < this.filters.size(); i++) {
             applyFilter(temps, this.filters.get(i));
+        }
+
+        // apply mapping
+        for (int i = this.mappings.size() - 1; i >= 0; i--) {
+            applyMapping(temps, this.mappings.get(i));
         }
 
         // apply result expression
@@ -71,6 +71,7 @@ public class Transformer {
             JsonObject parentItem = parentList.get(i).getAsJsonObject();
             JsonElement parentCheckVal = parentItem.get(jsonMapping.getParentFieldName());
 
+            JsonArray insertArray = new JsonArray();
             for (int j = 0; j < childList.size(); j++) {
                 JsonObject childItem = childList.get(j).getAsJsonObject();
                 JsonElement childCheckVal = childItem.get(jsonMapping.getChildFieldName());
@@ -79,8 +80,15 @@ public class Transformer {
                 if (childCheckVal != null && parentCheckVal != null && childCheckVal.toString().equals(parentCheckVal.toString())) {
                     System.out.println("Match Child Item");
 
-                    parentItem.add(dstFieldName, childItem);
+                    insertArray.add(childItem);
                 }
+            }
+            if(insertArray.size() == 0){
+              // do nothing
+            } else if(insertArray.size() == 1){
+                parentItem.add(dstFieldName, insertArray.get(0));
+            } else{
+                parentItem.add(dstFieldName + "List", insertArray);
             }
         }
 
@@ -107,5 +115,13 @@ public class Transformer {
 
     public void setAcceptHolder(String resultExpression) {
         this.resultExpression = resultExpression;
+    }
+
+    public void addInvokeInput(String student, String invokeExpression) {
+
+    }
+
+    public void addHttpInput(String student, String s, String s1) {
+
     }
 }
