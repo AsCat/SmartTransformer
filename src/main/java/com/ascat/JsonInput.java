@@ -2,9 +2,9 @@ package com.ascat;
 
 public class JsonInput {
 
-    private String initialValue;
+    private String originalInput;
 
     public JsonInput(String structValue) {
-        this.initialValue = structValue;
+        this.originalInput = structValue;
     }
 }

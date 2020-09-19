@@ -17,13 +17,13 @@ public class Transformer {
     private List<JsonMapping> mappings = new ArrayList<>();
     private List<JsonFilter> filters = new ArrayList<>();
 
-    private Map<String, TempStrunct> temps = new HashMap<>();
+    private Map<String, TempStruct> temps = new HashMap<>();
 
     private String resultExpression;
 
     public void addInput(String structName, String structValue) {
         this.inputs.put(structName, new JsonInput(structValue));
-        this.temps.put(structName, new TempStrunct(structValue));
+        this.temps.put(structName, new TempStruct(structValue));
     }
 
     public void addFilter(String filterExpression) {
@@ -34,7 +34,7 @@ public class Transformer {
         this.mappings.add(new JsonMapping(mapping));
     }
 
-    public Map<String, TempStrunct> process() {
+    public Map<String, TempStruct> process() {
 
         this.mappings = new DependencyParser().sort(this.mappings);
 
@@ -44,20 +44,20 @@ public class Transformer {
         }
 
         // apply filter
-        for(int i = 0; i < this.filters.size(); i++){
+        for (int i = 0; i < this.filters.size(); i++) {
             applyFilter(temps, this.filters.get(i));
         }
 
         // apply result expression
-        for (String key : temps.keySet()){
+        for (String key : temps.keySet()) {
             resultExpression = resultExpression.replace("$" + key, temps.get(key).getData());
         }
-        temps.put("$RESULT", new TempStrunct(resultExpression));
+        temps.put("$RESULT", new TempStruct(resultExpression));
 
         return temps;
     }
 
-    private void applyMapping(Map<String, TempStrunct> temps, JsonMapping jsonMapping) {
+    private void applyMapping(Map<String, TempStruct> temps, JsonMapping jsonMapping) {
 
         System.out.println(" process apply mapping with expression: " + jsonMapping.getExpression());
         String parentStructName = jsonMapping.getParentStructName();
@@ -84,25 +84,25 @@ public class Transformer {
             }
         }
 
-        temps.put(parentStructName, new TempStrunct(parentList.toString()));
+        temps.put(parentStructName, new TempStruct(parentList.toString()));
     }
 
 
-    private void applyFilter(Map<String, TempStrunct> temps, JsonFilter filter) {
+    private void applyFilter(Map<String, TempStruct> temps, JsonFilter filter) {
 
         String structName = filter.getStructName();
         String jsonData = temps.get(structName).getData();
 
         JsonArray objList = JsonParser.parseString(jsonData).getAsJsonArray();
 
-        for (int i = objList.size() - 1; i >= 0; i--){
+        for (int i = objList.size() - 1; i >= 0; i--) {
             JsonObject item = objList.get(i).getAsJsonObject();
 
-            if(!filter.IsMatch(item)){
+            if (!filter.IsMatch(item)) {
                 objList.remove(i);
             }
         }
-        temps.put(structName, new TempStrunct(objList.toString()));
+        temps.put(structName, new TempStruct(objList.toString()));
     }
 
     public void setAcceptHolder(String resultExpression) {

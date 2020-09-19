@@ -1,10 +1,10 @@
 package com.ascat;
 
-public class TempStrunct {
+public class TempStruct {
 
     private String data;
 
-    public TempStrunct(String structValue) {
+    public TempStruct(String structValue) {
         this.data = structValue;
     }
 

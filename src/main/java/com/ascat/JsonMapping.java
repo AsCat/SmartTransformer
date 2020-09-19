@@ -4,14 +4,14 @@ public class JsonMapping {
 
     private String expression;
     private StructFiled dstFiled;
-    private StructFiled mapSrcFiled1;
-    private StructFiled mapSrcFiled2;
+    private StructFiled srcFiled1;
+    private StructFiled srcFiled2;
 
     public JsonMapping(String mapping) {
         //("(A.a2=B.b1)->A.a4"
         this.expression = mapping;
-        mapSrcFiled1 = new StructFiled(StringUtils.middle(mapping, "(", "="));
-        mapSrcFiled2 = new StructFiled(StringUtils.middle(mapping, "=", ")"));
+        srcFiled1 = new StructFiled(StringUtils.middle(mapping, "(", "="));
+        srcFiled2 = new StructFiled(StringUtils.middle(mapping, "=", ")"));
         dstFiled = new StructFiled(StringUtils.middle(mapping, "->", ""));
     }
 
@@ -24,18 +24,18 @@ public class JsonMapping {
     }
 
     public String getParentFieldName() {
-        return mapSrcFiled1.getStructName().equalsIgnoreCase(dstFiled.getStructName()) ? mapSrcFiled1.getStructFiled() : mapSrcFiled2.getStructFiled();
+        return srcFiled1.getStructName().equalsIgnoreCase(dstFiled.getStructName()) ? srcFiled1.getStructFiled() : srcFiled2.getStructFiled();
     }
 
     public String getChildStructName() {
-        return mapSrcFiled1.getStructName().equalsIgnoreCase(dstFiled.getStructName()) ? mapSrcFiled2.getStructName() : mapSrcFiled1.getStructName();
+        return srcFiled1.getStructName().equalsIgnoreCase(dstFiled.getStructName()) ? srcFiled2.getStructName() : srcFiled1.getStructName();
     }
 
     public String getChildFieldName() {
-        return mapSrcFiled1.getStructName().equalsIgnoreCase(dstFiled.getStructName()) ? mapSrcFiled2.getStructFiled() : mapSrcFiled1.getStructFiled();
+        return srcFiled1.getStructName().equalsIgnoreCase(dstFiled.getStructName()) ? srcFiled2.getStructFiled() : srcFiled1.getStructFiled();
     }
 
-    public String getExpression(){
+    public String getExpression() {
         return expression;
     }
 }
