@@ -1,16 +1,31 @@
 package com.ascat;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 public class Main {
 
-    public static void main(String[] args) {
-        // write your code here
+    public static void main(String[] args) throws URISyntaxException, IOException {
 
+        // read json from file
         Transformer transformer = new Transformer();
-        transformer.addJsonInput("Class", "[{\"id\":1,\"teacherId\":2,\"name\":\"小1班\"}, {\"id\":2,\"teacherId\":2,\"name\":\"小2班\"}, {\"id\":3,\"teacherId\":3,\"name\":\"小3班\"}]");
-        transformer.addJsonInput("Teacher", "[{\"id\":1,\"name\":\"李老师\",\"age\":24},{\"id\":2,\"name\":\"陈老师\",\"age\":46},{\"id\":3,\"name\":\"王老师\",\"age\":26}]");
-        transformer.addJsonInput("Student", "[{\"id\":1,\"name\":\"东东\",\"sex\":\"男\", \"classId\":1},{\"id\":2\",\"name\":\"丁丁\",\"sex\":\"男\", \"classId\":2},{\"id\":3,\"name\":\"琪琪\",\"sex\":\"女\", \"classId\":1}]");
+
+        URI classUri = Main.class.getClassLoader().getResource("test/class.json").toURI();
+        String classJsonData = new String(Files.readAllBytes(Paths.get(classUri)));
+
+        URI teacherUri = Main.class.getClassLoader().getResource("test/teacher.json").toURI();
+        String teacherJsonData = new String(Files.readAllBytes(Paths.get(teacherUri)));
+
+        URI studentUri = Main.class.getClassLoader().getResource("test/student.json").toURI();
+        String studentJsonData = new String(Files.readAllBytes(Paths.get(studentUri)));
+
+        transformer.addJsonInput("Class", classJsonData);
+        transformer.addJsonInput("Teacher", teacherJsonData);
+        transformer.addJsonInput("Student", studentJsonData);
 
         //transformer.addInvokeInput("Student", "invoke://com.sss.xcc.getStudents({studentId}, 222)");
         //transformer.addHttpInput("Student", "http://www.baidu.com/students/{studentId}", ".content");

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "teacherId": 2,
+    "name": "小1班"
+  },
+  {
+    "id": 2,
+    "teacherId": 2,
+    "name": "小2班"
+  },
+  {
+    "id": 3,
+    "teacherId": 3,
+    "name": "小3班"
+  }
+]
