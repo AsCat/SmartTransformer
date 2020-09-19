@@ -1,4 +1,4 @@
-package com.netease;
+package com.ascat;
 
 public class TempStrunct {
 
