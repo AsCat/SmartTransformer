@@ -1,4 +1,4 @@
-package com.ascat;
+package com.ascat.transformer;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

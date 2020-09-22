@@ -1,4 +1,4 @@
-package com.ascat;
+package com.ascat.transformer;
 
 import com.google.gson.JsonObject;
 
