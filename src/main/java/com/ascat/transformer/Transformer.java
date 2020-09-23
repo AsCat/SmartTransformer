@@ -87,7 +87,7 @@ public class Transformer {
 
         sortMappingRules();
 
-        prepareDynamicDatas();
+        prepareDynamicDatas(runtimeParas);
 
         if(System.currentTimeMillis() > 0){
             return new HashMap<>();
@@ -112,7 +112,7 @@ public class Transformer {
         return temps;
     }
 
-    private void prepareDynamicDatas() {
+    private void prepareDynamicDatas(Map<String, Object> runtimeParas) {
         for (Map.Entry<String, Input> entry : inputs.entrySet()) {
             if(entry.getValue() instanceof HttpInput){
                 HttpInput input = (HttpInput)entry.getValue();
@@ -124,7 +124,16 @@ public class Transformer {
             }
         }
 
-
+        // acquire data with
+        for(String structName : sortedStructNames){
+            Input input = inputs.get(structName);
+            if (input instanceof HttpInput){
+                HttpInput httpInput = (HttpInput)input;
+                if(httpInput.canAcquire()){
+                    httpInput.acquireData(runtimeParas);
+                }
+            }
+        }
     }
 
     private void applyMapping(Map<String, DataStruct> temps, MappingRule jsonMapping) {

@@ -30,6 +30,7 @@ public class Sorter {
         // We reverse the order we constructed to get the
         // proper toposorting
         Collections.reverse(order);
+        System.out.println("Topo Sort Result:");
         System.out.println(order);
         return order;
     }
