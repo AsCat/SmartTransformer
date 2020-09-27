@@ -1,5 +1,7 @@
 package com.ascat.transformer;
 
+import com.ascat.transformer.input.DataType;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,7 +29,7 @@ public class Main {
 
         Map<String, String> classParas = new HashMap<>();
         classParas.put("id", "$runtime_id$");
-        transformer.addHttpInput("Class", "http://www.baidu.com/classes", classParas);
+        transformer.addHttpInput("Class", "http://www.baidu.com/classes", classParas, DataType.Array);
 
 //        transformer.addHttpInput("Class", classJsonData)
 //        transformer.addJsonInput("Teacher", teacherJsonData);
@@ -36,7 +38,7 @@ public class Main {
         Map<String, String> teacherParas = new HashMap<>();
 //        teacherParas.put("classId", "$Class.id$");
 //        teacherParas.put("teacherId", "$Class.teacherId$");
-        transformer.addHttpInput("Teacher", "http://www.baidu.com/teachers", teacherParas);
+        transformer.addHttpInput("Teacher", "http://www.baidu.com/teachers", teacherParas, DataType.Array);
 
 
         //transformer.addInvokeInput("Student", "invoke://com.sss.xcc.getStudents({studentId}, 222)");
@@ -45,23 +47,25 @@ public class Main {
         // transformer.addInvokeInput("Student", "HTTP", "invokeId", "id=")
 
 
-        transformer.addParamsMapping("Class.id", "$param$.id");
+        transformer.addParamsMapping("Class.id", "runtimeId");
 
-        transformer.addRelationMapping("Teacher.id", "Class.teacherId");
+        transformer.addRelationMapping("Class.teacherId", "Teacher.id");
+        transformer.addRelationMapping("Class.id", "Student.classId");
+        transformer.addRelationMapping("Teacher.id", "Student.teacherId");
 
-        transformer.addResultMapping("result", "Teacher");
+        transformer.addResultMapping("result1", "Teacher");
+        transformer.addResultMapping("teacherId", "Teacher.id");
 
-
-        transformer.addMapping("(Class.teacherId=Teacher.id)->Class.teacher");
-
-        transformer.addMapping("(Student.classId=Class.id)->Class.student");
-
-        transformer.addMapping("(Student.teacherId=Teacher.id)->Teacher.student");
+//        transformer.addMapping("(Class.teacherId=Teacher.id)->Class.teacher");
+//
+//        transformer.addMapping("(Student.classId=Class.id)->Class.student");
+//
+//        transformer.addMapping("(Student.teacherId=Teacher.id)->Teacher.student");
 
         //transformer.addFilter("Teacher.age<40");
         //transformer.addFilter("Student.sex=\"男\"");
 
-        transformer.setAcceptHolder("{\"class\":$Class$}");
+//        transformer.setAcceptHolder("{\"class\":$Class$}");
 
         // runtime paras input
         Map<String, Object> runtimeParas = new HashMap<>();

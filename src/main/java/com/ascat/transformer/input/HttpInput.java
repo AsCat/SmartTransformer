@@ -1,7 +1,7 @@
 package com.ascat.transformer.input;
 
 import com.ascat.transformer.Main;
-import com.ascat.transformer.MappingRule;
+import com.ascat.transformer.RelationMappingRule;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,6 +16,7 @@ import java.util.Map;
 public class HttpInput implements Input {
 
     private String structName;
+    private DataType dataType;
     private String rawHttpUrl;
     private Map<String, String> rawHttpParas = new HashMap<>();
 
@@ -30,8 +31,9 @@ public class HttpInput implements Input {
     private Input parentInput;
     private List<Input> childrenInput;
 
-    public HttpInput(String structName, String url, Map<String, String> paras) {
+    public HttpInput(String structName, DataType dataType, String url, Map<String, String> paras) {
         this.structName = structName;
+        this.dataType = dataType;
         this.rawHttpUrl = url;
         this.rawHttpParas = paras;
         analysis();
@@ -76,9 +78,9 @@ public class HttpInput implements Input {
         return canAcquireData;
     }
 
-    public boolean validateDependency(List<MappingRule> mappingRuleList) {
+    public boolean validateDependency(List<RelationMappingRule> relationMappingRuleList) {
 
-        for (MappingRule rule : mappingRuleList) {
+        for (RelationMappingRule rule : relationMappingRuleList) {
             if (rule.getChildStructName().equals(structName)) {
                 if (rule.getParentFieldPath().equals(dynamicNodePath)) {
                     for (Map.Entry<String, DynamicPara> entry : dynamicParas.entrySet()) {

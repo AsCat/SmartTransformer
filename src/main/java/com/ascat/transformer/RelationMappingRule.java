@@ -1,6 +1,6 @@
 package com.ascat.transformer;
 
-public class MappingRule {
+public class RelationMappingRule {
 
     private String expression;
     private StructFiled dstFiled;
@@ -10,7 +10,7 @@ public class MappingRule {
     private StructFiled parentFiled;
     private StructFiled childFiled;
 
-    public MappingRule(String mapping) {
+    public RelationMappingRule(String mapping) {
         //("(A.a2=B.b1)->A.a4"
         this.expression = mapping;
         srcFiled1 = new StructFiled(StringUtils.middle(mapping, "(", "="));
@@ -24,6 +24,13 @@ public class MappingRule {
             parentFiled = srcFiled2;
             childFiled = srcFiled1;
         }
+    }
+
+    public RelationMappingRule(String dstFiled, String srcFiled) {
+        this.expression = dstFiled + "=" + srcFiled;
+        srcFiled1 = new StructFiled(dstFiled);
+        srcFiled1 = new StructFiled(srcFiled);
+
     }
 
     public String getDstFiledName() {

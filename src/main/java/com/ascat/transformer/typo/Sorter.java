@@ -1,9 +1,5 @@
 package com.ascat.transformer.typo;
 
-import com.ascat.transformer.MappingRule;
-import com.ascat.transformer.typo.Graph;
-import com.ascat.transformer.typo.Node;
-
 import java.util.*;
 
 public class Sorter {

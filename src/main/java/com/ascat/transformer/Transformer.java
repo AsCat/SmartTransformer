@@ -1,6 +1,7 @@
 package com.ascat.transformer;
 
 
+import com.ascat.transformer.input.DataType;
 import com.ascat.transformer.input.HttpInput;
 import com.ascat.transformer.input.Input;
 import com.ascat.transformer.input.JsonInput;
@@ -19,7 +20,7 @@ public class Transformer {
     private Map<String, Input> inputs = new HashMap<>();
 
     private List<String> sortedStructNames = new ArrayList<>();
-    private List<MappingRule> mappingRuleList = new ArrayList<>();
+    private List<RelationMappingRule> relationMappingRuleList = new ArrayList<>();
 
     private List<JsonFilter> filters = new ArrayList<>();
 
@@ -32,8 +33,8 @@ public class Transformer {
         this.temps.put(structName, new DataStruct(structName, structJsonData));
     }
 
-    public void addHttpInput(String structName, String httpUrl, Map<String, String> httpParas) {
-        this.inputs.put(structName, new HttpInput(structName, httpUrl, httpParas));
+    public void addHttpInput(String structName, String httpUrl, Map<String, String> httpParas, DataType dataType) {
+        this.inputs.put(structName, new HttpInput(structName, dataType, httpUrl, httpParas));
     }
 
     public void addFilter(String filterExpression) {
@@ -50,11 +51,11 @@ public class Transformer {
     }
 
     public void addRelationMapping(String dstFiled, String srcFiled) {
-
+        this.relationMappingRuleList.add(new RelationMappingRule(dstFiled, srcFiled));
     }
 
     public void addMapping(String mapping) {
-        this.mappingRuleList.add(new MappingRule(mapping));
+        this.relationMappingRuleList.add(new RelationMappingRule(mapping));
     }
 
     private void sortInputStructs() {
@@ -63,7 +64,7 @@ public class Transformer {
 
         Graph g = new Graph();
 
-        for (MappingRule rule : mappingRuleList) {
+        for (RelationMappingRule rule : relationMappingRuleList) {
             Node parentNode = new Node(rule.getParentStructName());
             structNodeMap.put(rule.getParentStructName(), parentNode);
 
@@ -71,7 +72,7 @@ public class Transformer {
             structNodeMap.put(rule.getChildStructName(), childNode);
         }
 
-        for (MappingRule rule : mappingRuleList) {
+        for (RelationMappingRule rule : relationMappingRuleList) {
             Node parentNode = structNodeMap.get(rule.getParentStructName());
             Node childNode = structNodeMap.get(rule.getChildStructName());
             parentNode.addNeighbor(childNode.getName());
@@ -86,7 +87,7 @@ public class Transformer {
 
     private void sortMappingRules() {
 
-        Collections.sort(mappingRuleList, (b1, b2) -> {
+        Collections.sort(relationMappingRuleList, (b1, b2) -> {
             int s1 = this.sortedStructNames.indexOf(b1.getParentStructName());
             int s2 = this.sortedStructNames.indexOf(b2.getParentStructName());
             if (s1 == s2) return 0;
@@ -112,8 +113,8 @@ public class Transformer {
         }
 
         // apply mapping
-        for (int i = this.mappingRuleList.size() - 1; i >= 0; i--) {
-            applyMapping(temps, this.mappingRuleList.get(i));
+        for (int i = this.relationMappingRuleList.size() - 1; i >= 0; i--) {
+            applyMapping(temps, this.relationMappingRuleList.get(i));
         }
 
         // apply result expression
@@ -130,7 +131,7 @@ public class Transformer {
             if(entry.getValue() instanceof HttpInput){
                 HttpInput input = (HttpInput)entry.getValue();
                 if(!input.canAcquire()){
-                    if(!input.validateDependency(mappingRuleList)){
+                    if(!input.validateDependency(relationMappingRuleList)){
                         throw new RuntimeException("Missing Mapping Rule for Struct: " + input.getStructName());
                     }
                 }
@@ -149,7 +150,7 @@ public class Transformer {
         }
     }
 
-    private void applyMapping(Map<String, DataStruct> temps, MappingRule jsonMapping) {
+    private void applyMapping(Map<String, DataStruct> temps, RelationMappingRule jsonMapping) {
 
         System.out.println(" process apply mapping with expression: " + jsonMapping.getExpression());
         String parentStructName = jsonMapping.getParentStructName();

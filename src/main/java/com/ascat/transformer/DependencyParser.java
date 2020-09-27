@@ -13,13 +13,13 @@ public class DependencyParser {
         stack = new Stack<>();
     }
 
-    public List<MappingRule> sort(List<MappingRule> mappingRuleList) {
+    public List<RelationMappingRule> sort(List<RelationMappingRule> relationMappingRuleList) {
 
         Map<String, Node> structNodeMap = new HashMap<>();
 
         Graph g = new Graph();
 
-        for (MappingRule rule : mappingRuleList) {
+        for (RelationMappingRule rule : relationMappingRuleList) {
             Node parentNode = new Node(rule.getParentStructName());
             structNodeMap.put(rule.getParentStructName(), parentNode);
 
@@ -27,7 +27,7 @@ public class DependencyParser {
             structNodeMap.put(rule.getChildStructName(), childNode);
         }
 
-        for (MappingRule rule : mappingRuleList) {
+        for (RelationMappingRule rule : relationMappingRuleList) {
             Node parentNode = structNodeMap.get(rule.getParentStructName());
             Node childNode = structNodeMap.get(rule.getChildStructName());
             parentNode.addNeighbor(childNode.getName());
