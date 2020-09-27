@@ -49,9 +49,9 @@ public class Main {
 
         transformer.addParamsMapping("Class.id", "runtimeId");
 
-        transformer.addRelationMapping("Class.teacherId", "Teacher.id");
-        transformer.addRelationMapping("Class.id", "Student.classId");
-        transformer.addRelationMapping("Teacher.id", "Student.teacherId");
+        transformer.addRelationMapping("Teacher.id","Class.teacherId");
+        transformer.addRelationMapping("Student.classId", "Class.id");
+        transformer.addRelationMapping("Student.teacherId", "Teacher.id");
 
         transformer.addResultMapping("result1", "Teacher");
         transformer.addResultMapping("teacherId", "Teacher.id");
