@@ -16,7 +16,7 @@ import java.util.Map;
 public class HttpInput implements Input {
 
     private String structName;
-    private DataType dataType;
+    private StructType structType;
     private String rawHttpUrl;
     private Map<String, String> rawHttpParas = new HashMap<>();
 
@@ -31,9 +31,9 @@ public class HttpInput implements Input {
     private Input parentInput;
     private List<Input> childrenInput;
 
-    public HttpInput(String structName, DataType dataType, String url, Map<String, String> paras) {
+    public HttpInput(String structName, StructType structType, String url, Map<String, String> paras) {
         this.structName = structName;
-        this.dataType = dataType;
+        this.structType = structType;
         this.rawHttpUrl = url;
         this.rawHttpParas = paras;
         analysis();

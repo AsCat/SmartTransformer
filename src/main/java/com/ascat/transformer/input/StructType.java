@@ -1,5 +1,5 @@
 package com.ascat.transformer.input;
 
-public enum DataType {
+public enum StructType {
     Object, Array
 }

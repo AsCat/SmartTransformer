@@ -1,6 +1,6 @@
 package com.ascat.transformer;
 
-import com.ascat.transformer.input.DataType;
+import com.ascat.transformer.input.StructType;
 
 import java.io.IOException;
 import java.net.URI;
@@ -29,16 +29,16 @@ public class Main {
 
         Map<String, String> classParas = new HashMap<>();
         classParas.put("id", "$runtime_id$");
-        transformer.addHttpInput("Class", "http://www.baidu.com/classes", classParas, DataType.Array);
+        transformer.addHttpInput("Class", "http://www.baidu.com/classes", classParas, StructType.Array);
 
 //        transformer.addHttpInput("Class", classJsonData)
 //        transformer.addJsonInput("Teacher", teacherJsonData);
-        transformer.addJsonInput("Student", studentJsonData);
+        transformer.addJsonInput("Student", studentJsonData, StructType.Array);
 
         Map<String, String> teacherParas = new HashMap<>();
-//        teacherParas.put("classId", "$Class.id$");
+//        teacherParas.put("id", "$Class.id$");
 //        teacherParas.put("teacherId", "$Class.teacherId$");
-        transformer.addHttpInput("Teacher", "http://www.baidu.com/teachers", teacherParas, DataType.Array);
+        transformer.addHttpInput("Teacher", "http://www.baidu.com/teachers?id={id}", ".as." teacherParas, StructType.Array);
 
 
         //transformer.addInvokeInput("Student", "invoke://com.sss.xcc.getStudents({studentId}, 222)");
@@ -81,7 +81,7 @@ public class Main {
         for (String key : output.keySet()) {
             System.out.println("----------------------");
             System.out.println(key);
-            System.out.println(output.get(key).getData());
+            System.out.println(output.get(key).getStructData());
         }
 
         // JsonElement jelement = new JsonParser().parse(jsonLine);
