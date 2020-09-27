@@ -40,6 +40,19 @@ public class Transformer {
         this.filters.add(new JsonFilter(filterExpression));
     }
 
+
+    public void addParamsMapping(String StructFiled, String srcParam) {
+
+    }
+
+    public void addResultMapping(String resultField, String srcFiled) {
+
+    }
+
+    public void addRelationMapping(String dstFiled, String srcFiled) {
+
+    }
+
     public void addMapping(String mapping) {
         this.mappingRuleList.add(new MappingRule(mapping));
     }

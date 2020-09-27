@@ -24,6 +24,7 @@ public class Main {
         URI studentUri = Main.class.getClassLoader().getResource("test/studentList.json").toURI();
         String studentJsonData = new String(Files.readAllBytes(Paths.get(studentUri)));
 
+
         Map<String, String> classParas = new HashMap<>();
         classParas.put("id", "$runtime_id$");
         transformer.addHttpInput("Class", "http://www.baidu.com/classes", classParas);
@@ -33,8 +34,8 @@ public class Main {
         transformer.addJsonInput("Student", studentJsonData);
 
         Map<String, String> teacherParas = new HashMap<>();
-        teacherParas.put("classId", "$Class.id$");
-        teacherParas.put("teacherId", "$Class.teacherId$");
+//        teacherParas.put("classId", "$Class.id$");
+//        teacherParas.put("teacherId", "$Class.teacherId$");
         transformer.addHttpInput("Teacher", "http://www.baidu.com/teachers", teacherParas);
 
 
@@ -42,6 +43,14 @@ public class Main {
         //transformer.addHttpInput("Student", "http://www.baidu.com/students/{studentId}", ".content");
 
         // transformer.addInvokeInput("Student", "HTTP", "invokeId", "id=")
+
+
+        transformer.addParamsMapping("Class.id", "$param$.id");
+
+        transformer.addRelationMapping("Teacher.id", "Class.teacherId");
+
+        transformer.addResultMapping("result", "Teacher");
+
 
         transformer.addMapping("(Class.teacherId=Teacher.id)->Class.teacher");
 
