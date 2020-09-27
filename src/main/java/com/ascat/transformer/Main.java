@@ -53,7 +53,7 @@ public class Main {
         transformer.addRelationMapping("Student.classId", "Class.id");
         transformer.addRelationMapping("Student.teacherId", "Teacher.id");
 
-        transformer.addResultMapping("result1", "Teacher");
+        transformer.addResultMapping("teacherObj", "Teacher");
         transformer.addResultMapping("teacherId", "Teacher.id");
 
 //        transformer.addMapping("(Class.teacherId=Teacher.id)->Class.teacher");

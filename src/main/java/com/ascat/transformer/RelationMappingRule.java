@@ -3,39 +3,42 @@ package com.ascat.transformer;
 public class RelationMappingRule {
 
     private String expression;
-    private StructFiled dstFiled;
+//    private StructFiled dstFiled;
+
     private StructFiled srcFiled1;
     private StructFiled srcFiled2;
 
     private StructFiled parentFiled;
     private StructFiled childFiled;
 
-    public RelationMappingRule(String mapping) {
-        //("(A.a2=B.b1)->A.a4"
-        this.expression = mapping;
-        srcFiled1 = new StructFiled(StringUtils.middle(mapping, "(", "="));
-        srcFiled2 = new StructFiled(StringUtils.middle(mapping, "=", ")"));
-        dstFiled = new StructFiled(StringUtils.middle(mapping, "->", ""));
-
-        if(dstFiled.getStructName().equals(srcFiled1.getStructName())){
-            parentFiled = srcFiled1;
-            childFiled = srcFiled2;
-        }else {
-            parentFiled = srcFiled2;
-            childFiled = srcFiled1;
-        }
-    }
+//    public RelationMappingRule(String mapping) {
+//        ("(A.a2=B.b1)->A.a4"
+//        this.expression = mapping;
+//        srcFiled1 = new StructFiled(StringUtils.middle(mapping, "(", "="));
+//        srcFiled2 = new StructFiled(StringUtils.middle(mapping, "=", ")"));
+//        dstFiled = new StructFiled(StringUtils.middle(mapping, "->", ""));
+//
+//        if(dstFiled.getStructName().equals(srcFiled1.getStructName())){
+//            parentFiled = srcFiled1;
+//            childFiled = srcFiled2;
+//        }else {
+//            parentFiled = srcFiled2;
+//            childFiled = srcFiled1;
+//        }
+//    }
 
     public RelationMappingRule(String dstFiled, String srcFiled) {
         this.expression = dstFiled + "=" + srcFiled;
-        srcFiled1 = new StructFiled(dstFiled);
         srcFiled1 = new StructFiled(srcFiled);
+        srcFiled2 = new StructFiled(dstFiled);
 
+        parentFiled = srcFiled1;
+        childFiled = srcFiled2;
     }
 
-    public String getDstFiledName() {
-        return this.dstFiled.getStructFiledName();
-    }
+//    public String getDstFiledName() {
+//        return this.dstFiled.getStructFiledName();
+//    }
 
     public String getParentStructName() {
         return parentFiled.getStructName();
