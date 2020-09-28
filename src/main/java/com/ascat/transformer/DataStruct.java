@@ -5,22 +5,19 @@ import com.ascat.transformer.input.StructType;
 import com.ascat.transformer.resolver.FileDataStructResolver;
 import com.ascat.transformer.resolver.HttpDataStructResolver;
 import com.ascat.transformer.resolver.InvokeDataStructResolver;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class DataStruct {
+
+    private static Logger logger = LoggerFactory.getLogger(DataStruct.class.getName());
 
     private String structName;
     private String structData;
@@ -86,7 +83,7 @@ public class DataStruct {
         if (dataIsReady) return;
 
         // todo
-        System.out.println(structName + ": data is preparing //// .... ");
+        logger.debug("DataStruct data is preparing : {} " + structName);
 
         // if there exist more then one parent data struct
         // the length of parent must be same

@@ -44,4 +44,8 @@ public class StringUtils {
         int left = src.indexOf(end) + end.length();
         return src.substring(left, src.length());
     }
+
+    public static boolean isNullOrEmpty(String httpResult) {
+        return httpResult == null || httpResult.length() == 0;
+    }
 }

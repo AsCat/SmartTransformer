@@ -1,6 +1,7 @@
 package com.ascat.transformer;
 
 import com.ascat.transformer.input.StructType;
+import org.slf4j.impl.SimpleLogger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +14,8 @@ import java.util.Map;
 public class Main {
 
     public static void main(String[] args) throws URISyntaxException, IOException {
+
+        System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
 
         String testUrl = "http://120.92.146.126:8888";
         // read json from file
@@ -30,28 +33,28 @@ public class Main {
 
 //        Map<String, String> classParas = new HashMap<>();
 //        classParas.put("id", "$runtime_id$");
-        transformer.addHttpInput("Class", testUrl + "/classList.json", ".", StructType.Array);
+        transformer.addHttpInput("Class", testUrl + "/classList.json", "$", StructType.Array);
 //        transformer.addHttpInput("Class", testUrl + "/class_{id}.json", ".", StructType.Object);
 
 //        transformer.addHttpInput("Class", classJsonData)
 //        transformer.addJsonInput("Teacher", teacherJsonData);
-        transformer.addJsonInput("Student", studentJsonData, StructType.Array);
+//        transformer.addJsonInput("Student", studentJsonData, StructType.Array);
+        transformer.addHttpInput("Student", testUrl + "/student_{classId}_{teacherId}.json", "$", StructType.Array);
 
 //        Map<String, String> teacherParas = new HashMap<>();
 //        teacherParas.put("id", "$Class.id$");
 //        teacherParas.put("teacherId", "$Class.teacherId$");
-        transformer.addHttpInput("Teacher", testUrl + "/teacherList.json", ".", StructType.Array);
-
+        transformer.addHttpInput("Teacher", testUrl + "/teacher_{id}.json", "$", StructType.Array);
 
         //transformer.addInvokeInput("Student", "invoke://com.sss.xcc.getStudents({studentId}, 222)");
         //transformer.addHttpInput("Student", "http://www.baidu.com/students/{studentId}", ".content");
-
         // transformer.addInvokeInput("Student", "HTTP", "invokeId", "id=")
-
 
 //        transformer.addParamsMapping("Class.id", "runtimeId");
 
         transformer.addRelationMapping("Teacher.id","Class.teacherId");
+        transformer.addRelationMapping("Teacher.tid","Class.teacherId");
+
         transformer.addRelationMapping("Student.classId", "Class.id");
         transformer.addRelationMapping("Student.teacherId", "Teacher.id");
 
