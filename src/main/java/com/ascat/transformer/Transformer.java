@@ -29,9 +29,9 @@ public class Transformer {
         this.dataStructMap.put(structName, new DataStruct(structName, structJsonData, structType));
     }
 
-    public void addHttpInput(String structName, String httpUrl, Map<String, String> httpParas, StructType structType) {
+    public void addHttpInput(String structName, String httpUrl, String resultJsonPath, StructType structType) {
 //        this.inputs.put(structName, new HttpInput(structName, dataType, httpUrl, httpParas));
-        this.dataStructMap.put(structName, new DataStruct(structName, httpUrl, httpParas, structType));
+        this.dataStructMap.put(structName, new DataStruct(structName, httpUrl, resultJsonPath, structType));
     }
 
     public void addFilter(String filterExpression) {
@@ -127,6 +127,12 @@ public class Transformer {
 
     private void resolveStructRelations() {
 
+        // clear data relation rule
+        for (Map.Entry<String, DataStruct> entry : dataStructMap.entrySet()) {
+            entry.getValue().getParentRelationRules().clear();
+        }
+
+        // resolve data struct relation
         for (RelationMappingRule rule : relationMappingRuleList) {
             String parentStructName = rule.getParentStructName();
             String childStructName = rule.getChildStructName();
@@ -134,7 +140,9 @@ public class Transformer {
             dataStructMap.get(parentStructName).addChildRelation(childStructName, dataStructMap.get(childStructName));
             dataStructMap.get(childStructName).addParentRelation(parentStructName, dataStructMap.get(parentStructName));
 
+            dataStructMap.get(childStructName).addRelationRule(rule);
         }
+
     }
 
     private void prepareDynamicData(Map<String, Object> runtimeParas) {
@@ -154,7 +162,7 @@ public class Transformer {
         for (String structName : sortedStructNames) {
 
             DataStruct dataStruct = dataStructMap.get(structName);
-            dataStruct.prepareData();
+            dataStruct.prepareData(runtimeParas);
 
 //            Input input = inputs.get(structName);
 //            if (input instanceof HttpInput) {

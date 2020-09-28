@@ -14,6 +14,7 @@ public class Main {
 
     public static void main(String[] args) throws URISyntaxException, IOException {
 
+        String testUrl = "http://120.92.146.126:8888";
         // read json from file
         Transformer transformer = new Transformer();
 
@@ -27,18 +28,19 @@ public class Main {
         String studentJsonData = new String(Files.readAllBytes(Paths.get(studentUri)));
 
 
-        Map<String, String> classParas = new HashMap<>();
-        classParas.put("id", "$runtime_id$");
-        transformer.addHttpInput("Class", "http://www.baidu.com/classes", classParas, StructType.Array);
+//        Map<String, String> classParas = new HashMap<>();
+//        classParas.put("id", "$runtime_id$");
+        transformer.addHttpInput("Class", testUrl + "/classList.json", ".", StructType.Array);
+//        transformer.addHttpInput("Class", testUrl + "/class_{id}.json", ".", StructType.Object);
 
 //        transformer.addHttpInput("Class", classJsonData)
 //        transformer.addJsonInput("Teacher", teacherJsonData);
         transformer.addJsonInput("Student", studentJsonData, StructType.Array);
 
-        Map<String, String> teacherParas = new HashMap<>();
+//        Map<String, String> teacherParas = new HashMap<>();
 //        teacherParas.put("id", "$Class.id$");
 //        teacherParas.put("teacherId", "$Class.teacherId$");
-        transformer.addHttpInput("Teacher", "http://www.baidu.com/teachers?id={id}", ".as." teacherParas, StructType.Array);
+        transformer.addHttpInput("Teacher", testUrl + "/teacherList.json", ".", StructType.Array);
 
 
         //transformer.addInvokeInput("Student", "invoke://com.sss.xcc.getStudents({studentId}, 222)");
@@ -47,7 +49,7 @@ public class Main {
         // transformer.addInvokeInput("Student", "HTTP", "invokeId", "id=")
 
 
-        transformer.addParamsMapping("Class.id", "runtimeId");
+//        transformer.addParamsMapping("Class.id", "runtimeId");
 
         transformer.addRelationMapping("Teacher.id","Class.teacherId");
         transformer.addRelationMapping("Student.classId", "Class.id");
@@ -69,7 +71,7 @@ public class Main {
 
         // runtime paras input
         Map<String, Object> runtimeParas = new HashMap<>();
-        runtimeParas.put("runtime_id", 1);
+        runtimeParas.put("Class.id", 1);
 
         Map<String, DataStruct> output = transformer.process(runtimeParas);
 

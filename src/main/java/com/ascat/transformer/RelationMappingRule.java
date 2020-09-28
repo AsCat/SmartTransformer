@@ -5,8 +5,8 @@ public class RelationMappingRule {
     private String expression;
 //    private StructFiled dstFiled;
 
-    private StructFiled srcFiled1;
-    private StructFiled srcFiled2;
+//    private StructFiled srcFiled1;
+//    private StructFiled srcFiled2;
 
     private StructFiled parentFiled;
     private StructFiled childFiled;
@@ -29,11 +29,8 @@ public class RelationMappingRule {
 
     public RelationMappingRule(String dstFiled, String srcFiled) {
         this.expression = dstFiled + "=" + srcFiled;
-        srcFiled1 = new StructFiled(srcFiled);
-        srcFiled2 = new StructFiled(dstFiled);
-
-        parentFiled = srcFiled1;
-        childFiled = srcFiled2;
+        parentFiled = new StructFiled(srcFiled);
+        childFiled = new StructFiled(dstFiled);
     }
 
 //    public String getDstFiledName() {
