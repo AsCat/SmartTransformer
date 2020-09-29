@@ -1,8 +1,13 @@
 package com.ascat.transformer.typo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 public class Sorter {
+
+    private static Logger logger = LoggerFactory.getLogger(Sorter.class.getName());
 
     public static List<String> topoSort(Graph g) {
 
@@ -26,8 +31,7 @@ public class Sorter {
         // We reverse the order we constructed to get the
         // proper toposorting
         Collections.reverse(order);
-        System.out.println("Topo Sort Result:");
-        System.out.println(order);
+        logger.debug("Topo Sort Result: {}", order);
         return order;
     }
 

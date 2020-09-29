@@ -87,7 +87,6 @@ public class HttpDataStructResolver {
                     String values = entry.getValue().substring(1, entry.getValue().length() - 1);
                     String[] valuesArray = values.split(",");
 
-
                     if(arrayLength < 0){
                         arrayLength = valuesArray.length;
 
@@ -127,12 +126,12 @@ public class HttpDataStructResolver {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(resRequestUrl).build();
 
-                logger.debug("Request URL= {}", resRequestUrl);
-
-                long start_time = System.nanoTime();
-
                 try {
+                    long start_time = System.nanoTime();
                     Response response = client.newCall(request).execute();
+                    long end_time = System.nanoTime();
+                    double difference = (end_time - start_time) / 1e6;
+                    logger.debug("Request URL {} Finished in {} ms", resRequestUrl, difference);
 
                     if(response.code() != 200){
                         throw new RuntimeException(String.format("Unexpected response status code %s for url %s: ",
@@ -149,9 +148,7 @@ public class HttpDataStructResolver {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                long end_time = System.nanoTime();
-                double difference = (end_time - start_time) / 1e6;
-                logger.debug("Request Finished in {} ms", difference);
+
 
                 JsonElement element = JsonParser.parseString(resultJsonData);
                 resultJsonArray.add(element);
@@ -170,12 +167,13 @@ public class HttpDataStructResolver {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder().url(originalUrl).build();
 
-            logger.debug("Request URL= {}", originalUrl);
-
-            long start_time = System.nanoTime();
-
             try {
+                long start_time = System.nanoTime();
                 Response response = client.newCall(request).execute();
+                long end_time = System.nanoTime();
+                double difference = (end_time - start_time) / 1e6;
+                logger.debug("Request URL {} Finished in {} ms", originalUrl, difference);
+
                 if(response.code() != 200){
                     throw new RuntimeException(String.format("Unexpected status response code %s for url %s: ",
                             response.code(), request.url().toString()));
@@ -185,9 +183,7 @@ public class HttpDataStructResolver {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            long end_time = System.nanoTime();
-            double difference = (end_time - start_time) / 1e6;
-            logger.debug("Request Finished in {} ms", difference);
+
         }
 
         logger.debug("DataStruct {} Resolver Result is {}", structName, resultJsonData);
@@ -208,9 +204,7 @@ public class HttpDataStructResolver {
 
     public static String getDataFromPath(String structData, String dstJsonPath) {
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(structData);
-
         String result = JsonPath.read(document, dstJsonPath).toString();
-
         return result;
     }
 }
